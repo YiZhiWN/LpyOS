@@ -1,3 +1,4 @@
+void write_mem8(int addr, int data);
 void io_hlt(void);
 void io_cli(void);
 void io_out8(int port, int data);
@@ -34,7 +35,6 @@ void HariMain(void)
 	vram = (char *) 0xa0000;/* 地址变量赋值 */
 	xsize = 320;
 	ysize = 200;
-
 	/* 根据 0xa0000 + x + y * 320 计算坐标 8*/
 	boxfill8(vram, xsize, COL8_008484,  0,         0,          xsize -  1, ysize - 29);
 	boxfill8(vram, xsize, COL8_C6C6C6,  0,         ysize - 28, xsize -  1, ysize - 28);
@@ -53,13 +53,12 @@ void HariMain(void)
 	boxfill8(vram, xsize, COL8_FFFFFF, xsize - 47, ysize -  3, xsize -  4, ysize -  3);
 	boxfill8(vram, xsize, COL8_FFFFFF, xsize -  3, ysize - 24, xsize -  3, ysize -  3);
 
-	for (;;) {
+	for(;;) {
 		io_hlt();
 	}
 }
 
-void init_palette(void)
-{
+void init_palette(void){
 	static unsigned char table_rgb[16 * 3] = {
 		0x00, 0x00, 0x00,	/*  0:黑 */
 		0xff, 0x00, 0x00,	/*  1:梁红 */
@@ -78,25 +77,23 @@ void init_palette(void)
 		0x00, 0x84, 0x84,	/* 14:浅暗蓝 */
 		0x84, 0x84, 0x84	/* 15:暗灰 */
 	};
+
 	set_palette(0, 15, table_rgb);
 	return;
-
-	/* C语言中的static char语句只能用于数据，相当于汇编中的DB指令 */
 }
 
 void set_palette(int start, int end, unsigned char *rgb)
 {
 	int i, eflags;
-	eflags = io_load_eflags();	/* 记录中断许可标志的值 */
-	io_cli(); 					/* 将中断许可标志置为0,禁止中断 */
+	eflags = io_load_eflags();
+	io_cli();
 	io_out8(0x03c8, start);
-	for (i = start; i <= end; i++) {
-		io_out8(0x03c9, rgb[0] / 4);
-		io_out8(0x03c9, rgb[1] / 4);
-		io_out8(0x03c9, rgb[2] / 4);
-		rgb += 3;
+	for(i = start; i <= end; i++){
+		io_out8(0x03c9, rgb[0] / 4); 
+		io_out8(0x03c9, rgb[1] / 4); 
+		io_out8(0x03c9, rgb[2] / 4); rgb += 3;
 	}
-	io_store_eflags(eflags);	/* 复原中断许可标志 */
+	io_store_eflags(eflags);  /* 复原中断许可标志 */
 	return;
 }
 

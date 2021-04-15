@@ -9,7 +9,7 @@
 		GLOBAL	_io_hlt, _io_cli, _io_sti, _io_stihlt
 		GLOBAL	_io_in8,  _io_in16,  _io_in32
 		GLOBAL	_io_out8, _io_out16, _io_out32
-		GLOBAL	_io_load_eflags, _io_store_eflags
+		GLOBAL	_io_load_eflags, _io_store_eflags, _write_mem8
 
 [SECTION .text]
 
@@ -74,4 +74,10 @@ _io_store_eflags:	; void io_store_eflags(int eflags);
 		MOV		EAX,[ESP+4]
 		PUSH	EAX
 		POPFD		; POP EFLAGS 
+		RET
+
+_write_mem8: ;write_mem8(int addr, int data);
+		MOV ECX,[ESP+4]
+		MOV AL,[ESP+8]
+		MOV [ECX],AL
 		RET

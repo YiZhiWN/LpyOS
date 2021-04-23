@@ -1,10 +1,11 @@
-.bin
-.lst
-.bim
-.gas
-.hrb
-.map
-.obj
-.img
-.sys
+bootpack.nas
+src/*.bin
+src/*.lst
+src/*.bim
+src/*.gas
+src/*.hrb
+src/*.map
+src/*.obj
+src/*.img
+src/*.sys
 
